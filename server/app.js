@@ -37,6 +37,7 @@ app.all('*', (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+  console.log(err);
   const { status } = err;
   res.status(status).json({ error: err}) 
 });

@@ -6,10 +6,10 @@ const lostPetSchema = new Schema({
   species: String,
   breed: String,
   age: Number,
-  // owner: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: "Owner",
-  // },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "Owner",
+  },
   lastLocation: {
     street: String,
     city: String,

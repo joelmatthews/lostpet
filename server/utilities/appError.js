@@ -13,7 +13,14 @@ class LostPetsNotFoundError extends AppError {
     }
 }
 
+class NotOwnerError extends AppError {
+    constructor(message) {
+        super(message || 'You are not the owner of this Lost Pet', 403)
+    }
+}
+
 module.exports = {
     AppError,
-    LostPetsNotFoundError
+    LostPetsNotFoundError,
+    NotOwnerError
 }

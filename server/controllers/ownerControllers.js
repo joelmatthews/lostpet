@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Owner = require('../models/ownerModel');
+const dotenv = require('dotenv');
+dotenv.config();
+const secret = process.env.JWT_SECRET;
 
 module.exports.register = async (req, res, next) => {
     const { email, password } = req.body;
@@ -29,7 +32,7 @@ module.exports.register = async (req, res, next) => {
 
         jwt.sign(
             payload,
-            process.env.JWT_SECRET,
+            secret,
             { expiresIn: '7 days' },
             (err, token ) => {
                 if (err) throw err;
@@ -64,7 +67,7 @@ module.exports.login = async (req, res, next) => {
 
         jwt.sign(
             payload,
-            process.env.JWT_SECRET,
+            secret,
             { expiresIn: '30 days' },
             (err, token) => {
                 if (err) throw err;
