@@ -8,6 +8,7 @@ const secret = process.env.JWT_SECRET;
 
 const { getAllPets, getLostPetById, createLostPet, editLostPet, deleteLostPet } = require('../controllers/lostPetControllers');
 const { isOwner } = require('../middleware/isLostPetOwner');
+const { validateLostPet } = require('../middleware/lostPetValidation');
 
 //verifys JWT & passes decoded token to req.auth along with payload
 router.use(
@@ -24,7 +25,7 @@ router.get('/', getAllPets);
 
 router.get('/:id', getLostPetById);
 
-router.post('/new', createLostPet);
+router.post('/new', validateLostPet, createLostPet);
 
 router.put('/:id/edit', editLostPet);
 
