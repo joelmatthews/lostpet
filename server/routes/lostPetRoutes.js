@@ -27,7 +27,7 @@ router.get('/:id', getLostPetById);
 
 router.post('/new', validateLostPet, createLostPet);
 
-router.put('/:id/edit', editLostPet);
+router.put('/:id/edit', validateLostPet, editLostPet);
 
 router.delete('/:id/delete', deleteLostPet);
 

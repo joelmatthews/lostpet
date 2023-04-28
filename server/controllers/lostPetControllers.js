@@ -40,7 +40,9 @@ module.exports.createLostPet = async (req, res, next) => {
     const lostPetLocation = await geocode(urlEncodedAddress);
     const lostPetData = {
       ...req.body,
-      owner: req.auth.owner.id,  
+      lostPetImage: "http://placeholder.cloudinary.com",
+      owner: req.auth.owner.id,
+      lastLocationAddress: addressString,
       lastLocation: lostPetLocation,
     };
     const owner = await Owner.findById(req.auth.owner.id);
@@ -57,9 +59,17 @@ module.exports.createLostPet = async (req, res, next) => {
 module.exports.editLostPet = async (req, res, next) => {
   try {
     const id = req.params.id;
+    const { houseNumber, street, city, state, zipcode } = req.body;
+    const addressString = `${houseNumber} ${street} ${city} ${state} ${zipcode}`;
+    const urlEncodedAddress = encodeURIComponent(addressString);
+    const lostPetLocation = await geocode(urlEncodedAddress);
     const updatedLostPet = await LostPet.findByIdAndUpdate(
       id,
-      { ...req.body },
+      {
+        ...req.body,
+        LastLocationAddress: addressString,
+        lastLocation: lostPetLocation,
+      },
       { returnDocument: "after" }
     );
 

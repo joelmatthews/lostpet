@@ -41,10 +41,18 @@ const lostPetSchema = new Schema(
       type: Date,
       required: true
     },
+    lostPetImage : {
+      type: String,
+      required: true,
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "Owner",
       required: true,
+    },
+    lastLocationAddress: {
+      type: String,
+      required: true
     },
     lastLocation: {
       type: LastLocationSchema,
