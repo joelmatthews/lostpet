@@ -44,6 +44,10 @@ module.exports.createLostPet = async (req, res, next) => {
       owner: req.auth.owner.id,
       lastLocationAddress: addressString,
       lastLocation: lostPetLocation,
+      lostPetImages: req.files.map((file) => ({
+        path: file.path,
+        filename: file.filename
+      }))
     };
     const owner = await Owner.findById(req.auth.owner.id);
     const newLostPet = await LostPet.create(lostPetData);
