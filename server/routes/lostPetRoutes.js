@@ -20,6 +20,12 @@ const {
 const { isOwner } = require("../middleware/isLostPetOwner");
 const { validateLostPet } = require("../middleware/lostPetValidation");
 
+
+
+router.get("/", getAllPets);
+
+router.get("/:id", getLostPetById);
+
 //verifys JWT & passes decoded token to req.auth along with payload
 router.use(
   jwt({
@@ -30,10 +36,6 @@ router.use(
 
 //verifys that the currently authenticated user is the owner of the document that is to be modified by the route endpoint
 router.use(["/:id/edit", "/:id/delete"], isOwner);
-
-router.get("/", getAllPets);
-
-router.get("/:id", getLostPetById);
 
 router.post("/new", upload.array('images', 3), validateLostPet, createLostPet);
 

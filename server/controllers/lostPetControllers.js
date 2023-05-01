@@ -40,7 +40,6 @@ module.exports.createLostPet = async (req, res, next) => {
     const lostPetLocation = await geocode(urlEncodedAddress);
     const lostPetData = {
       ...req.body,
-      lostPetImage: "http://placeholder.cloudinary.com",
       owner: req.auth.owner.id,
       lastLocationAddress: addressString,
       lastLocation: lostPetLocation,
@@ -71,11 +70,22 @@ module.exports.editLostPet = async (req, res, next) => {
       id,
       {
         ...req.body,
+        lostPetImages: req.files.map((file) => ({
+          path: file.path,
+          filename: file.filename
+        })),
         LastLocationAddress: addressString,
         lastLocation: lostPetLocation,
       },
       { returnDocument: "after" }
     );
+
+    if (req.body.deleteImages) {
+      for (let imageFileName of req.body.deleteImages) {
+        console.log(`deleting ${imageFileName}`)
+        await cloudinary.uploader.destroy(imageFileName)
+      }
+    }
 
     res.status(201).json(updatedLostPet);
   } catch (error) {

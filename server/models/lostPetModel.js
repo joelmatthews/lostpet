@@ -74,7 +74,7 @@ lostPetSchema.post("findOneAndRemove", async (doc) => {
   try {
     if (doc) {
       for (let image of doc.lostPetImages) {
-        console.log(image.filename);
+        console.log(`deleting ${image.filename}`);
         await cloudinary.uploader.destroy(image.filename)
       }
       const owner = await Owner.findById(doc.owner);
