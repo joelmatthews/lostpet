@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const Owner = require("./ownerModel");
+const { cloudinary } = require('../utilities/cloudinary');
 
 const LastLocationSchema = new Schema({
   type: {
@@ -72,6 +73,10 @@ lostPetSchema.post("findOneAndRemove", async (doc) => {
   console.log("triggered mongoose middleware!");
   try {
     if (doc) {
+      for (let image of doc.lostPetImages) {
+        console.log(image.filename);
+        await cloudinary.uploader.destroy(image.filename)
+      }
       const owner = await Owner.findById(doc.owner);
       if (owner) {
         const index = owner.lostPets.indexOf(doc._id);
