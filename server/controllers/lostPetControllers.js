@@ -6,7 +6,7 @@ const geocode = require("../utilities/geocode");
 // GET all lost pets
 module.exports.getAllPets = async (req, res, next) => {
   try {
-    const lostPets = await LostPet.find({});
+    const lostPets = await LostPet.find({}).populate('owner', ['firstName', 'lastName', 'phoneNumber', 'email', 'lostPets']);
     if (lostPets.length === 0) {
       throw new LostPetsNotFoundError();
     }
@@ -20,7 +20,7 @@ module.exports.getAllPets = async (req, res, next) => {
 module.exports.getLostPetById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const lostPet = await LostPet.findById(id);
+    const lostPet = await LostPet.findById(id).populate('owner', ['firstName', 'lastName', 'phoneNumber', 'email', 'lostPets']);
 
     if (!lostPet) {
       throw new LostPetsNotFoundError();
