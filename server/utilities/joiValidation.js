@@ -12,6 +12,7 @@ const lostPetValidationSchema = Joi.object({
   city: Joi.string().required(),
   state: Joi.string().required(),
   zipcode: Joi.number().positive().required(),
+  deleteImages: Joi.array().items(Joi.string())
 });
 
 const ownerRegistrationValidationSchema = Joi.object({

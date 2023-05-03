@@ -39,7 +39,7 @@ router.use(["/:id/edit", "/:id/delete"], isOwner);
 
 router.post("/new", upload.array('images', 3), validateLostPet, createLostPet);
 
-router.put("/:id/edit", validateLostPet, editLostPet);
+router.put("/:id/edit", upload.array('images', 3), validateLostPet, editLostPet);
 
 router.delete("/:id/delete", deleteLostPet);
 

@@ -2,11 +2,18 @@ const LostPet = require("../models/lostPetModel");
 const Owner = require("../models/ownerModel");
 const { LostPetsNotFoundError } = require("../utilities/appError");
 const geocode = require("../utilities/geocode");
+const { cloudinary } = require('../utilities/cloudinary');
 
 // GET all lost pets
 module.exports.getAllPets = async (req, res, next) => {
   try {
-    const lostPets = await LostPet.find({}).populate('owner', ['firstName', 'lastName', 'phoneNumber', 'email', 'lostPets']);
+    const lostPets = await LostPet.find({}).populate("owner", [
+      "firstName",
+      "lastName",
+      "phoneNumber",
+      "email",
+      "lostPets",
+    ]);
     if (lostPets.length === 0) {
       throw new LostPetsNotFoundError();
     }
@@ -20,7 +27,13 @@ module.exports.getAllPets = async (req, res, next) => {
 module.exports.getLostPetById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const lostPet = await LostPet.findById(id).populate('owner', ['firstName', 'lastName', 'phoneNumber', 'email', 'lostPets']);
+    const lostPet = await LostPet.findById(id).populate("owner", [
+      "firstName",
+      "lastName",
+      "phoneNumber",
+      "email",
+      "lostPets",
+    ]);
 
     if (!lostPet) {
       throw new LostPetsNotFoundError();
@@ -45,8 +58,8 @@ module.exports.createLostPet = async (req, res, next) => {
       lastLocation: lostPetLocation,
       lostPetImages: req.files.map((file) => ({
         path: file.path,
-        filename: file.filename
-      }))
+        filename: file.filename,
+      })),
     };
     const owner = await Owner.findById(req.auth.owner.id);
     const newLostPet = await LostPet.create(lostPetData);
@@ -72,7 +85,7 @@ module.exports.editLostPet = async (req, res, next) => {
         ...req.body,
         lostPetImages: req.files.map((file) => ({
           path: file.path,
-          filename: file.filename
+          filename: file.filename,
         })),
         LastLocationAddress: addressString,
         lastLocation: lostPetLocation,
@@ -82,9 +95,12 @@ module.exports.editLostPet = async (req, res, next) => {
 
     if (req.body.deleteImages) {
       for (let imageFileName of req.body.deleteImages) {
-        console.log(`deleting ${imageFileName}`)
-        await cloudinary.uploader.destroy(imageFileName)
+        console.log(`deleting ${imageFileName}`);
+        await cloudinary.uploader.destroy(imageFileName);
       }
+      await LostPet.updateOne({
+        $pull: { lostPetImages: { filename: { $in: req.body.deleteImages } } },
+      });
     }
 
     res.status(201).json(updatedLostPet);
