@@ -4,6 +4,7 @@ const req = require('express/lib/request');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoSanitize = require('express-mongo-sanitize');
 
 //Custom Errors
 const { AppError } = require('./utilities/appError');
@@ -25,6 +26,7 @@ db.once('open', () => {
 // Express application-level middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(mongoSanitize());
 
 //Express Router Routes
 app.use('/lostpets', lostPetRoutes);
