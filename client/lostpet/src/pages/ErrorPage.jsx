@@ -1,23 +1,24 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Paper, Typography } from "@mui/material";
 import { useRouteError } from "react-router-dom";
+import ButtonAppBar from "../components/Navbar";
 
 export default function ErrorPage() {
   const error = useRouteError();
-  console.error(error);
+  console.log(error);
 
   return (
+    <>
+    <ButtonAppBar />
     <Container sx={{ display: "flex", justifyContent: "center" }}>
-      <Box>
-        <Typography variant="h2" component="h2">
+      <Paper elevation={3} sx={{padding: "3rem"}}>
+        <Typography variant="h2" component="h2" textAlign="center" marginBottom={3}>
           An Error Has Occured!
         </Typography>
-        <Typography variant="paragraph" component="body1">
-          Sorry, an unexpected error has occured.
+        <Typography variant="h4" component="h4">
+            {error.status} {error.data.message}
         </Typography>
-        <Typography variant="paragraph" component="body1">
-            {error.status} {error.message}
-        </Typography>
-      </Box>
+      </Paper>
     </Container>
+    </>
   );
 }
