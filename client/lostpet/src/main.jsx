@@ -9,6 +9,8 @@ import HomePage from './pages/Home';
 import LostPetIndex from './pages/LostPetIndex';
 
 import { loader as rootLoader } from './pages/Root';
+import { action as registerAction } from './pages/Home';
+import { loader as lostPetLoader } from './pages/LostPetIndex';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,7 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     loader: rootLoader,
+    action: registerAction,
     id: "root",
     children: [
       {
@@ -25,6 +28,7 @@ const router = createBrowserRouter([
       {
         path: "lostpets",
         element: <LostPetIndex />,
+        loader: lostPetLoader
       }
     ]
   },

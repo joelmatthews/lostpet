@@ -1,15 +1,19 @@
-import { useRouteLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
+
+
+import { lostPetInstance } from "../util/BaseAxiosInstance";
 
 import LostPetIndexCard from "../components/LostPetIndexCard";
 
 const LostPetIndex = () => {
-  const lostPets = useRouteLoaderData("root");
+  const lostPets = useLoaderData();
 
   return (
     <>
       {lostPets &&
         lostPets.map((lostpet) => (
           <LostPetIndexCard key={lostpet._id}
+            lostPetId={lostpet._id}
             lostPetImg={
               lostpet.lostPetImages.length > 0
                 ? lostpet.lostPetImages[0].path
@@ -26,5 +30,20 @@ const LostPetIndex = () => {
     </>
   );
 };
+
+export async function loader() {
+  try {
+    const response = await lostPetInstance.get("/lostpets");
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw json(
+      { message: error.response.data.error.message },
+      { status: error.response.data.error.status }
+    );
+    return null;
+  }
+}
 
 export default LostPetIndex;
