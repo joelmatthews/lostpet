@@ -1,15 +1,17 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 
-export default function ButtonAppBar() {
+import { Form, Link } from "react-router-dom";
+
+export default function ButtonAppBar({ token }) {
   return (
-    <Box sx={{ flexGrow: 1, marginBottom: 5}}>
+    <Box sx={{ flexGrow: 1, marginBottom: 5 }}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -22,9 +24,9 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Lost Pets
+            <Link to="/lostpets" style={{ textDecoration: 'none', color: 'inherit' }}>Lost Pets</Link>
           </Typography>
-          <Button color="inherit">Login</Button>
+          {token ? <Form method="post" action="/logout"><Button color="inherit" type="submit">Logout</Button></Form> : <Link to="/login" style={{ textDecoration: 'none', color: 'inherit'}}><Button color="inherit">Login</Button></Link>}
         </Toolbar>
       </AppBar>
     </Box>

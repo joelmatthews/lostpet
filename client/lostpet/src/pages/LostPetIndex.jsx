@@ -4,12 +4,14 @@ import { useLoaderData } from "react-router-dom";
 import { lostPetInstance } from "../util/BaseAxiosInstance";
 
 import LostPetIndexCard from "../components/LostPetIndexCard";
+import MapboxMap from "../components/MapboxHomeMap";
 
 const LostPetIndex = () => {
   const lostPets = useLoaderData();
 
   return (
     <>
+      <MapboxMap />
       {lostPets &&
         lostPets.map((lostpet) => (
           <LostPetIndexCard key={lostpet._id}
