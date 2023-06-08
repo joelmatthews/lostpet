@@ -6,13 +6,16 @@ import './index.css'
 import Root from "./pages/Root";
 import ErrorPage from './pages/ErrorPage';
 import HomePage from './pages/Home';
+import LostPetRootLayout from './pages/LostPetRootLayout';
 import LostPetIndex from './pages/LostPetIndex';
 import LoginPage from './pages/Login';
+import LostPetShowPage from './pages/LostPetShowPage';
 
 import { loader as rootLoader } from './pages/Root';
 import { action as registerAction } from './pages/Home';
 import { loader as indexDataLoader } from './pages/Home';
 import { loader as lostPetLoader } from './pages/LostPetIndex';
+import { loader as lostPetShowLoader } from './pages/LostPetShowPage';
 import { action as loginAction } from './pages/Login';
 import { action as logoutAction } from './pages/Logout';
 
@@ -32,9 +35,26 @@ const router = createBrowserRouter([
       },
       {
         path: "lostpets",
-        element: <LostPetIndex />,
-        id: "index",
-        loader: lostPetLoader
+        element: <LostPetRootLayout />,
+        children: [
+          {
+            index: true,
+            element: <LostPetIndex />,
+            loader: lostPetLoader,
+            id: 'index'
+          },
+          {
+            path: ':lostPetId',
+            id: 'lostPetShow',
+            loader: lostPetShowLoader,
+            children: [
+              {
+                index: true,
+                element: <LostPetShowPage />
+              }
+            ]
+          }
+        ]
       },
       {
         path: "login",

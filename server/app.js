@@ -40,7 +40,10 @@ app.all('*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.log(err);
-  const { status } = err;
+  let { status } = err;
+  // if (!status) {
+  //   status = 404;
+  // }
   res.status(status).json({ error: err}) 
 });
 

@@ -52,7 +52,7 @@ const LostPetIndexCard = (props) => {
                 Description: {props.lostPetDescription}
               </Typography>
             </Box> */}
-            <Button variant="contained" sx={{marginTop: 2}}><Link to={props.lostPetId} style={{ textDecoration: 'none', color: '#fff'}}>View Pet</Link></Button>
+            <Button variant="contained" sx={{marginTop: 2}}><Link to={`/lostpets/${props.lostPetId}`} style={{ textDecoration: 'none', color: '#fff'}}>View Pet</Link></Button>
           </Box>
         </Grid>
       </Grid>

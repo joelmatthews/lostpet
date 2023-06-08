@@ -3,6 +3,7 @@ const Owner = require("../models/ownerModel");
 const { LostPetsNotFoundError } = require("../utilities/appError");
 const geocode = require("../utilities/geocode");
 const { cloudinary } = require('../utilities/cloudinary');
+const mongoose = require("mongoose");
 
 // GET all lost pets
 module.exports.getAllPets = async (req, res, next) => {
@@ -27,13 +28,21 @@ module.exports.getAllPets = async (req, res, next) => {
 module.exports.getLostPetById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const lostPet = await LostPet.findById(id).populate("owner", [
+    const objectId = mongoose.Types.ObjectId.isValid(id) ? mongoose.Types.ObjectId(id) : null;
+
+    if (!objectId) {
+      throw new LostPetsNotFoundError();
+    }
+
+    const lostPet = await LostPet.findById(objectId).populate("owner", [
       "firstName",
       "lastName",
       "phoneNumber",
       "email",
       "lostPets",
     ]);
+
+    console.log(lostPet);
 
     if (!lostPet) {
       throw new LostPetsNotFoundError();
