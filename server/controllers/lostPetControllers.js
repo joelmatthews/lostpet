@@ -28,7 +28,7 @@ module.exports.getAllPets = async (req, res, next) => {
 module.exports.getLostPetById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const objectId = mongoose.Types.ObjectId.isValid(id) ? mongoose.Types.ObjectId(id) : null;
+    const objectId = mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : null;
 
     if (!objectId) {
       throw new LostPetsNotFoundError();
