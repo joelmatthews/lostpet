@@ -1,18 +1,23 @@
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import { Button, Typography } from "@mui/material";
 
 import MapboxMap from "../components/MapboxHomeMap";
 import QuiltedImageList from "../components/QuiltedImageList";
 
-import { json, useRouteLoaderData } from "react-router-dom";
+import { useSubmit, Link, json, useRouteLoaderData, redirect } from "react-router-dom";
 import { lostPetInstance } from "../util/BaseAxiosInstance";
 import SimpleAccordion from "../components/Accordion";
-import { Typography } from "@mui/material";
+import { getToken } from "../util/authTokenGetter";
 
 const ShowPage = () => {
   const lostPetData = useRouteLoaderData("lostPetShow");
+  const token = useRouteLoaderData("root");
+  const submit = useSubmit();
+
   console.log(lostPetData);
+  console.log(token);
 
   const lostPetImageData = lostPetData.lostPetImages.map((image, index) => {
     if (index < 3) {
@@ -43,6 +48,14 @@ const ShowPage = () => {
     }
   );
 
+  const startDeleteHandler = () => {
+    const proceed = window.confirm('Are you sure?');
+
+    if (proceed) {
+      submit(null, { method: 'delete'});
+    }
+  };
+
   //   const lostPetImageDataTest = [
   //     {
   //       img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
@@ -67,7 +80,7 @@ const ShowPage = () => {
 
   return (
     <>
-      <Paper elevation={3} sx={{ padding: 3 }}>
+      <Paper elevation={3} sx={{ padding: 6, marginBottom: "6rem" }}>
         <Stack spacing={2}>
           <Box sx={{ width: "90%", margin: "0 auto" }}>
             <MapboxMap />
@@ -76,7 +89,7 @@ const ShowPage = () => {
             <QuiltedImageList itemData={lostPetImageData} />
           </Box>
           <Box>
-            <Box sx={{margin: 3}}>
+            <Box sx={{ margin: 3 }}>
               <Typography
                 variant="h4"
                 component="h2"
@@ -88,6 +101,29 @@ const ShowPage = () => {
               </Typography>
             </Box>
             <SimpleAccordion lostPetData={lostPetData} />
+            {token &&
+              token.userId &&
+              token.userId === lostPetData.owner._id && (
+                <Box sx={{ marginBottom: 5, marginTop: 10 }}>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    <Button variant="contained" color="warning">
+                      <Link
+                        to="edit"
+                        style={{ color: "inherit", textDecoration: "none" }}
+                      >
+                        Edit
+                      </Link>
+                    </Button>
+                      <Button variant="contained" color="error" onClick={startDeleteHandler}>
+                        Delete
+                      </Button>
+                  </Stack>
+                </Box>
+              )}
           </Box>
         </Stack>
       </Paper>
@@ -111,5 +147,32 @@ export const loader = async ({ request, params }) => {
     );
   }
 
+  return null;
+};
+
+export const action = async ({ request, params }) => {
+  const lostPetId = params.lostPetId;
+
+  const token = getToken();
+
+  try {
+    const response = await lostPetInstance.delete(`/lostpets/${lostPetId}/delete`, {
+      headers: {
+        Authorization: 'Bearer ' + token.token,
+      }
+    });
+
+    if (response.status === 201) {
+      return redirect('/lostpets');
+    }
+
+    return null;
+  } catch (error) {
+    console.log(error);
+    throw json(
+      { message: error.response.data.error.message },
+      { status: error.response.data.error.status }
+    );
+  }
   return null;
 };

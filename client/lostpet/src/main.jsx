@@ -16,6 +16,7 @@ import { action as registerAction } from './pages/Home';
 import { loader as indexDataLoader } from './pages/Home';
 import { loader as lostPetLoader } from './pages/LostPetIndex';
 import { loader as lostPetShowLoader } from './pages/LostPetShowPage';
+import { action as lostPetDeleteAction } from './pages/LostPetShowPage';
 import { action as loginAction } from './pages/Login';
 import { action as logoutAction } from './pages/Logout';
 
@@ -50,7 +51,8 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <LostPetShowPage />
+                element: <LostPetShowPage />,
+                action: lostPetDeleteAction
               }
             ]
           }

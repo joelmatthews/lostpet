@@ -29,7 +29,7 @@ const Login = () => {
               variant="outlined"
               size="small"
               sx={{ width: "100%" }}
-              //   {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null ? { error: true } : {})}
             />
             <TextField
               id="owner-password"
@@ -40,7 +40,7 @@ const Login = () => {
               variant="outlined"
               size="small"
               sx={{ width: "100%" }}
-              //   {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null ? { error: true } : {})}
             />
             {errors && errors.authError ? (
               <Alert severity="error" sx={{ marginY: 1 }}>
