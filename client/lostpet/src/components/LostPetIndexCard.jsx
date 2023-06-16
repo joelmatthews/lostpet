@@ -4,9 +4,6 @@ import { Link } from "react-router-dom";
 import classes from "./LostPetIndexCard.module.css";
 
 const LostPetIndexCard = (props) => {
-  // const readableLostDate = new Date(props.dateLost).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric"})
-  // console.log(readableLostDate);
-
   const inputDate = props.dateLost ? props.dateLost : new Date().toISOString();
   const dateComponents = inputDate.split('T')[0].split('-');
   const year = parseInt(dateComponents[0], 10);

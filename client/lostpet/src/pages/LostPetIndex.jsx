@@ -1,5 +1,6 @@
-import { useLoaderData } from "react-router-dom";
+import Button from "@mui/material/Button";
 
+import { Link, useLoaderData, useRouteLoaderData } from "react-router-dom";
 
 import { lostPetInstance } from "../util/BaseAxiosInstance";
 
@@ -8,13 +9,25 @@ import MapboxMap from "../components/MapboxHomeMap";
 
 const LostPetIndex = () => {
   const lostPets = useLoaderData();
+  const token = useRouteLoaderData("root");
 
   return (
     <>
+      {token && (
+        <Button sx={{ marginBottom: 3 }} variant="contained" color="success">
+          <Link
+            to="/lostpets/new"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            Create Lost Pet +
+          </Link>
+        </Button>
+      )}
       <MapboxMap />
       {lostPets &&
         lostPets.map((lostpet) => (
-          <LostPetIndexCard key={lostpet._id}
+          <LostPetIndexCard
+            key={lostpet._id}
             lostPetId={lostpet._id}
             lostPetImg={
               lostpet.lostPetImages.length > 0
