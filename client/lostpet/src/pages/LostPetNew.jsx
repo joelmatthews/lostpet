@@ -12,12 +12,16 @@ import Input from "@mui/material/Input";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Button, FormControl } from "@mui/material";
 
-import { useSubmit, useRouteLoaderData, redirect } from "react-router-dom";
+import {
+  useSubmit,
+  useRouteLoaderData,
+  redirect,
+  useFetcher,
+} from "react-router-dom";
 
 import { lostPetInstance } from "../util/BaseAxiosInstance";
 import states from "../util/StatesForSelect";
 import { getToken } from "../util/authTokenGetter";
-
 
 const LostPetNew = () => {
   const submit = useSubmit();
@@ -44,10 +48,6 @@ const LostPetNew = () => {
     }));
   };
 
-  // const handleDateSelect = (event) => {
-  //   setSelectedDate(event.target.value);
-  // };
-
   const handleSelectChange = (event) => {
     setSelectedState(event.target.value);
   };
@@ -67,15 +67,16 @@ const LostPetNew = () => {
       formData.append(`${formInput}`, formTextData[formInput]);
     }
 
-    for (const image of images) {
-      formData.append("images", image);
+    for (let i = 0; i < images.length; i++) {
+      formData.append(`image${i}`, images[i], images[i].name);
     }
 
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}, ${pair[1]}`);
-    }
-
-    submit(formData, {method: 'post', action: '/lostpets/new'});
+   
+    submit(formData, {
+      method: "post",
+      action: "/lostpets/new",
+      encType: "multipart/form-data",
+    });
   };
 
   return (
@@ -291,28 +292,34 @@ const LostPetNew = () => {
 
 export default LostPetNew;
 
-export const action = async ({request, params}) => {
-  const data = Object.fromEntries(await request.formData());
+export const action = async ({ request, params }) => {
+  const formData = await request.formData();
+
+  for (let i = 0; i < 3; i++) {
+    const image = formData.get(`image${i}`);
+    if (image) {
+      formData.append("images", image, `image${i}`);
+      formData.delete(`image${i}`)
+    }
+  }
 
   const token = getToken();
+  try {
+    const response = await lostPetInstance.post("/lostpets/new", formData, {
+      headers: {
+        Authorization: "Bearer " + token.token,
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-    try {
+    console.log(response);
 
-      const response = await lostPetInstance.post('/lostpets/new', data, {
-        headers: {
-          'Authorization': 'Bearer ' + token.token,
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-
-      console.log(response);
-
-      if (response.status === 201) {
-        return redirect('/lostpets');
-      }
-
-    } catch (error) {
-      console.log(error);
-      return error.response;
-    };
+    if (response.status === 201) {
+      return redirect("/lostpets");
+    }
+  } catch (error) {
+    console.log(error);
+    return error.response;
+  }
+  return null;
 };
