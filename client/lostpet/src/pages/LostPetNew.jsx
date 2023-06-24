@@ -8,15 +8,15 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
+import Alert from "@mui/material/Alert";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Button, FormControl } from "@mui/material";
 
 import {
   useSubmit,
-  useRouteLoaderData,
+  useActionData,
   redirect,
-  useFetcher,
+  json,
 } from "react-router-dom";
 
 import { lostPetInstance } from "../util/BaseAxiosInstance";
@@ -25,6 +25,8 @@ import { getToken } from "../util/authTokenGetter";
 
 const LostPetNew = () => {
   const submit = useSubmit();
+  const errors = useActionData();
+  console.log(errors);
   const [selectedState, setSelectedState] = useState("");
   const [images, setImages] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
@@ -71,7 +73,6 @@ const LostPetNew = () => {
       formData.append(`image${i}`, images[i], images[i].name);
     }
 
-   
     submit(formData, {
       method: "post",
       action: "/lostpets/new",
@@ -81,7 +82,7 @@ const LostPetNew = () => {
 
   return (
     <>
-      <Paper elevation={3} sx={{ padding: 5 }}>
+      <Paper elevation={3} sx={{ padding: 5, marginY: 5 }}>
         <Box sx={{ marginY: 5 }}>
           <Typography variant="h3" component="h3" sx={{ textAlign: "center" }}>
             Create a Lost Pet
@@ -103,7 +104,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('name') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={6}>
@@ -125,7 +126,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('species') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -137,7 +138,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('breed') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -150,7 +151,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('age') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={6}></Grid>
@@ -169,7 +170,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('houseNumber') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={8}>
@@ -181,7 +182,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('street') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -193,7 +194,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('city') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -228,7 +229,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                // {...(errors && errors !== null ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError[0].includes('zipcode') ? { error: true } : {})}
               />
             </Grid>
           </Grid>
@@ -275,6 +276,13 @@ const LostPetNew = () => {
               />
             </Grid>
           </Grid>
+          {errors && errors.validationError ? (
+              <Alert variant="outlined" severity="error" sx={{ marginTop: 5, width: '100%' }}>
+                {errors.validationError}
+              </Alert>
+            ) : (
+              ""
+            )}
           <Grid
             item
             xs={4}
@@ -294,12 +302,13 @@ export default LostPetNew;
 
 export const action = async ({ request, params }) => {
   const formData = await request.formData();
+  const errors = {};
 
   for (let i = 0; i < 3; i++) {
     const image = formData.get(`image${i}`);
     if (image) {
       formData.append("images", image, `image${i}`);
-      formData.delete(`image${i}`)
+      formData.delete(`image${i}`);
     }
   }
 
@@ -315,11 +324,20 @@ export const action = async ({ request, params }) => {
     console.log(response);
 
     if (response.status === 201) {
-      return redirect("/lostpets");
+      return redirect(`/lostpets/${response.data._id}`);
     }
   } catch (error) {
-    console.log(error);
-    return error.response;
+    console.log(error.response);
+    if (error.response.status === 500) {
+      throw json(
+        { message: error.response.data.message },
+        { status: error.response.status }
+      );
+    }
+    if (error.response.status === 400) {
+      errors.validationError = error.response.data.error.message;
+    }
+    return errors;
   }
   return null;
 };
