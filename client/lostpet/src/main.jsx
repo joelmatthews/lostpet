@@ -13,12 +13,14 @@ import LostPetIndex from "./pages/LostPetIndex";
 import LoginPage from "./pages/Login";
 import LostPetShowPage from "./pages/LostPetShowPage";
 import LostPetNew from "./pages/LostPetNew";
+import LostPetEdit from "./pages/LostPetEdit";
 
 import { loader as rootLoader } from "./pages/Root";
 import { action as registerAction } from "./pages/Home";
 import { loader as indexDataLoader } from "./pages/Home";
 import { loader as lostPetLoader } from "./pages/LostPetIndex";
 import { action as lostPetNewAction } from "./pages/LostPetNew";
+import { action as lostPetEditAction } from "./pages/LostPetEdit";
 import { loader as lostPetShowLoader } from "./pages/LostPetShowPage";
 import { action as lostPetDeleteAction } from "./pages/LostPetShowPage";
 import { action as loginAction } from "./pages/Login";
@@ -64,6 +66,11 @@ const router = createBrowserRouter([
                 element: <LostPetShowPage />,
                 action: lostPetDeleteAction,
               },
+              {
+                path: "edit",
+                element: <LostPetEdit />,
+                action: lostPetEditAction
+              }
             ],
           },
         ],
