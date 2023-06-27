@@ -104,7 +104,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('name') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('name') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={6}>
@@ -126,7 +126,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('species') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('species') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -138,7 +138,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('breed') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('breed') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -151,7 +151,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('age') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('age') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={6}></Grid>
@@ -170,7 +170,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('houseNumber') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('houseNumber') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={8}>
@@ -182,7 +182,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('street') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('street') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -194,7 +194,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('city') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('city') ? { error: true } : {})}
               />
             </Grid>
             <Grid item xs={4}>
@@ -229,7 +229,7 @@ const LostPetNew = () => {
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
-                {...(errors && errors !== null && errors.validationError[0].includes('zipcode') ? { error: true } : {})}
+                {...(errors && errors !== null && errors.validationError && errors.validationError[0].includes('zipcode') ? { error: true } : {})}
               />
             </Grid>
           </Grid>
@@ -330,7 +330,7 @@ export const action = async ({ request, params }) => {
     console.log(error.response);
     if (error.response.status === 500) {
       throw json(
-        { message: error.response.data.message },
+        { message: error.response.data.error.message },
         { status: error.response.status }
       );
     }

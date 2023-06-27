@@ -19,8 +19,15 @@ class NotOwnerError extends AppError {
     }
 }
 
+class MaxImageUploadsError extends AppError {
+    constructor(message) {
+        super(message || 'You cannot have more than three images uploaded!', 400)
+    }
+}
+
 module.exports = {
     AppError,
     LostPetsNotFoundError,
-    NotOwnerError
+    NotOwnerError,
+    MaxImageUploadsError
 }

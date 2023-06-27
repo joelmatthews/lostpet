@@ -1,8 +1,11 @@
 const LostPet = require("../models/lostPetModel");
 const Owner = require("../models/ownerModel");
-const { LostPetsNotFoundError } = require("../utilities/appError");
+const {
+  LostPetsNotFoundError,
+  MaxImageUploadsError,
+} = require("../utilities/appError");
 const geocode = require("../utilities/geocode");
-const { cloudinary } = require('../utilities/cloudinary');
+const { cloudinary } = require("../utilities/cloudinary");
 const mongoose = require("mongoose");
 
 // GET all lost pets
@@ -28,7 +31,9 @@ module.exports.getAllPets = async (req, res, next) => {
 module.exports.getLostPetById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const objectId = mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : null;
+    const objectId = mongoose.Types.ObjectId.isValid(id)
+      ? new mongoose.Types.ObjectId(id)
+      : null;
 
     if (!objectId) {
       throw new LostPetsNotFoundError();
@@ -88,19 +93,6 @@ module.exports.editLostPet = async (req, res, next) => {
     const addressString = `${houseNumber} ${street} ${city} ${state} ${zipcode}`;
     const urlEncodedAddress = encodeURIComponent(addressString);
     const lostPetLocation = await geocode(urlEncodedAddress);
-    const updatedLostPet = await LostPet.findByIdAndUpdate(
-      id,
-      {
-        ...req.body,
-        lostPetImages: req.files.map((file) => ({
-          path: file.path,
-          filename: file.filename,
-        })),
-        LastLocationAddress: addressString,
-        lastLocation: lostPetLocation,
-      },
-      { returnDocument: "after" }
-    );
 
     if (req.body.deleteImages) {
       for (let imageFileName of req.body.deleteImages) {
@@ -111,6 +103,35 @@ module.exports.editLostPet = async (req, res, next) => {
         $pull: { lostPetImages: { filename: { $in: req.body.deleteImages } } },
       });
     }
+
+    const existingLostPet = await LostPet.findById(id);
+    const existingLostPetImages = existingLostPet.lostPetImages || [];
+    const filteredExistingLostPetImages = existingLostPetImages.filter(image => (!req.body.deleteImages.includes(image.filename)));
+
+    console.log(existingLostPetImages);
+    console.log(filteredExistingLostPetImages);
+
+    const totalImages = existingLostPetImages.length + req.files.length;
+    if (totalImages > 3) {
+      throw new MaxImageUploadsError();
+    }
+
+    const updatedLostPet = await LostPet.findByIdAndUpdate(
+      id,
+      {
+        ...req.body,
+        lostPetImages: [
+          ...filteredExistingLostPetImages,
+          ...req.files.map((file) => ({
+            path: file.path,
+            filename: file.filename,
+          })),
+        ],
+        LastLocationAddress: addressString,
+        lastLocation: lostPetLocation,
+      },
+      { returnDocument: "after" }
+    );
 
     res.status(201).json(updatedLostPet);
   } catch (error) {
