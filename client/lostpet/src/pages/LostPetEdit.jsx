@@ -413,7 +413,7 @@ export const action = async ({ request, params }) => {
     }
   } catch (error) {
     console.log(error.response);
-    if (error.response.status === 500 || error.response.staus === 404) {
+    if (error.response.status === 500 || error.response.status === 404) {
       throw json(
         { message: error.response.data.message },
         { status: error.response.status }
@@ -424,5 +424,4 @@ export const action = async ({ request, params }) => {
     }
     return errors;
   }
-  return null;
 };

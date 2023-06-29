@@ -106,7 +106,13 @@ module.exports.editLostPet = async (req, res, next) => {
 
     const existingLostPet = await LostPet.findById(id);
     const existingLostPetImages = existingLostPet.lostPetImages || [];
-    const filteredExistingLostPetImages = existingLostPetImages.filter(image => (!req.body.deleteImages.includes(image.filename)));
+    let filteredExistingLostPetImages = existingLostPetImages;
+
+    if (req.body.deleteImages) {
+      filteredExistingLostPetImages = existingLostPetImages.filter(
+        (image) => !req.body.deleteImages.includes(image.filename)
+      );
+    }
 
     console.log(existingLostPetImages);
     console.log(filteredExistingLostPetImages);

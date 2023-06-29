@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import { Button, Typography } from "@mui/material";
 
-import MapboxMap from "../components/MapboxHomeMap";
+import MapboxShowMap from "../components/MapboxShowMap";
 import QuiltedImageList from "../components/QuiltedImageList";
 
 import { useSubmit, Link, json, useRouteLoaderData, redirect } from "react-router-dom";
@@ -83,7 +83,7 @@ const ShowPage = () => {
       <Paper elevation={3} sx={{ padding: 6, marginBottom: "6rem" }}>
         <Stack spacing={2}>
           <Box sx={{ width: "90%", margin: "0 auto" }}>
-            <MapboxMap />
+            <MapboxShowMap coordinates={lostPetData.lastLocation.coordinates}/>
           </Box>
           <Box>
             <QuiltedImageList itemData={lostPetImageData} />
