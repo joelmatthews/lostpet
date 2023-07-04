@@ -12,7 +12,7 @@ export default function MapboxShowMap({ coordinates }) {
   const map = useRef(null);
   const [lng, setLng] = useState(coordinates[0]);
   const [lat, setLat] = useState(coordinates[1]);
-  const [zoom, setZoom] = useState(18);
+  const [zoom, setZoom] = useState(14);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -38,7 +38,7 @@ export default function MapboxShowMap({ coordinates }) {
   });
 
   return (
-    <Paper elevation={3}>
+    <Paper elevation={3} sx={{border: '2px solid navy'}}>
       <div className="map-sidebar">
         Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
       </div>

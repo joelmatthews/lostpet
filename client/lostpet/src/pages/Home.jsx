@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -6,18 +8,20 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
 import FormSubmissionPending from "../components/formSubmissionPending";
+import Map, { Marker, Popup } from "react-map-gl";
 
 import { lostPetInstance } from "../util/BaseAxiosInstance";
 
-import { Form, json, redirect } from "react-router-dom";
-import { useActionData, useNavigation, useRouteLoaderData } from "react-router-dom";
+import { Form, json, redirect, Link } from "react-router-dom";
+import { useActionData, useNavigation, useRouteLoaderData, useLoaderData } from "react-router-dom";
 
-import MapboxMap from "../components/MapboxHomeMap";
 
 const HomePage = () => {
   const errors = useActionData();
   const token = useRouteLoaderData('root');
   const navigation = useNavigation();
+  const lostPets = useLoaderData();
+  const [popupInfo, setPopupInfo] = useState(null);
 
   return (
     <>
@@ -165,7 +169,56 @@ const HomePage = () => {
           </Paper>
         </Grid>}
         <Grid item xs={0} {...(token ? { sm: 12 } : { sm : 8 })}>
-          <MapboxMap />
+          {/* <MapboxMap /> */}
+          <Map
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
+        initialViewState={{
+          longitude: -98.5,
+          latitude: 38.0,
+          zoom: 3,
+        }}
+        style={{ width: "100%", height: '100%' }}
+        mapStyle="mapbox://styles/mapbox/streets-v12"
+      >
+        {lostPets.map((lostPet) => (
+          <Marker
+            longitude={lostPet.lastLocation.coordinates[0]}
+            latitude={lostPet.lastLocation.coordinates[1]}
+            anchor="bottom"
+            key={lostPet._id}
+            onClick={(e) => {
+              e.originalEvent.stopPropagation();
+              setPopupInfo(lostPet);
+            }}
+          >
+            <img src="../../map-marker-2-24.png" />
+          </Marker>
+        ))}
+        {popupInfo && (
+          <Popup
+            anchor="top"
+            longitude={popupInfo.lastLocation.coordinates[0]}
+            latitude={popupInfo.lastLocation.coordinates[1]}
+            onClose={() => setPopupInfo(null)}
+          >
+            <Box>
+              <Typography variant="h4" component="h6">
+                {popupInfo.name}
+              </Typography>
+              <Button variant="contained" sx={{marginY: 1}}>
+                <Link style={{textDecoration: 'none', color: 'inherit'}} to={`/lostpets/${popupInfo._id}`}>
+                  View Pet's Page
+                </Link>
+              </Button>
+              <img
+                src={popupInfo.lostPetImages[0].path}
+                width="100%"
+                height="120px"
+              />
+            </Box>
+          </Popup>
+        )}
+      </Map>
         </Grid>
       </Grid>
     </>

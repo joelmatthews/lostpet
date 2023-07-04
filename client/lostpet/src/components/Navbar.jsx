@@ -26,7 +26,7 @@ export default function ButtonAppBar({ token }) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link to="/lostpets" style={{ textDecoration: 'none', color: 'inherit' }}>Lost Pets</Link>
           </Typography>
-          {token ? <Form method="post" action="/logout"><Button color="inherit" type="submit">Logout</Button></Form> : <Link to="/login" style={{ textDecoration: 'none', color: 'inherit'}}><Button color="inherit">Login</Button></Link>}
+          {token ? <Form method="post" action="/logout"><Button color="inherit" type="submit">Logout</Button></Form> : (<><Link to="/" style={{ textDecoration: 'none', color: 'inherit'}}><Button color="inherit">Register</Button></Link><Link to="/login" style={{ textDecoration: 'none', color: 'inherit'}}><Button color="inherit">Login</Button></Link></>)}
         </Toolbar>
       </AppBar>
     </Box>

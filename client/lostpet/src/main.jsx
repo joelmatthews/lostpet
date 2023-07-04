@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
 import LocalizationContextProvider from "./contexts/DateLocalizationProvider";
+import MUITheme from "./contexts/MUITheme";
 
 import Root from "./pages/Root";
 import ErrorPage from "./pages/ErrorPage";
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
             path: "new",
             id: "new",
             element: <LostPetNew />,
-            action: lostPetNewAction
+            action: lostPetNewAction,
           },
           {
             path: ":lostPetId",
@@ -69,8 +70,8 @@ const router = createBrowserRouter([
               {
                 path: "edit",
                 element: <LostPetEdit />,
-                action: lostPetEditAction
-              }
+                action: lostPetEditAction,
+              },
             ],
           },
         ],
@@ -90,8 +91,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <LocalizationContextProvider>
-      <RouterProvider router={router} />
-    </LocalizationContextProvider>
+    <MUITheme>
+      <LocalizationContextProvider>
+        <RouterProvider router={router} />
+      </LocalizationContextProvider>
+    </MUITheme>
   </React.StrictMode>
 );
