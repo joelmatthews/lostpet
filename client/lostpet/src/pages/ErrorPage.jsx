@@ -6,6 +6,15 @@ export default function ErrorPage() {
   const error = useRouteError();
   console.log(error);
 
+  let errorStatus = error.status || 404;
+  let message = error.data ? error.data.message : "Not Found!";
+
+  if (error.response) {
+    errorStatus = error.response.status;
+    message = error.response.data.error.message;
+  }
+
+
   return (
     <>
     <ButtonAppBar />
@@ -15,7 +24,7 @@ export default function ErrorPage() {
           An Error Has Occured!
         </Typography>
         <Typography variant="h4" component="h4">
-            {error.status} {error.data.message}
+            {errorStatus ? errorStatus : ''} {message ? message : ''} 
         </Typography>
       </Paper>
     </Container>
