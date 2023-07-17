@@ -8,6 +8,7 @@ import Map, { Marker, Popup } from "react-map-gl";
 import { useTheme } from "@mui/material/styles";
 
 import QuiltedImageList from "../components/QuiltedImageList";
+import ShowPageSkeleton from "../components/ShowPageSkeleton";
 
 import {
   useSubmit,
@@ -43,33 +44,11 @@ const ShowPage = () => {
     }
   };
 
-  //   const lostPetImageDataTest = [
-  //     {
-  //       img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-  //       title: "test",
-  //       rows: 2,
-  //       cols: 2,
-  //     },
-  //     {
-  //         img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-  //         title: "test",
-  //         rows: 1,
-  //         cols: 1,
-  //       },
-  //       {
-  //         img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-  //         title: "test",
-  //         rows: 1,
-  //         cols: 1,
-  //       }
-  //   ];
-  // console.log(lostPetImageData);
-
   return (
     <>
       <Suspense
         fallback={
-          <h1 style={{ textAlign: "center", color: "red" }}>Loading...</h1>
+          <ShowPageSkeleton />
         }
       >
         <Await resolve={lostPetData.resolvedLostPetData}>

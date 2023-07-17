@@ -8,7 +8,6 @@ import { Link, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import { lostPetInstance } from "../util/BaseAxiosInstance";
 
 import LostPetIndexCard from "../components/LostPetIndexCard";
-import MapboxMap from "../components/MapboxHomeMap";
 
 const LostPetIndex = () => {
   const lostPets = useLoaderData();
@@ -18,7 +17,7 @@ const LostPetIndex = () => {
   return (
     <>
       {token && (
-        <Button sx={{ marginBottom: 3 }} variant="contained" color="success">
+        <Button sx={{ marginBottom: 1 }} variant="contained" color="success">
           <Link
             to="/lostpets/new"
             style={{ textDecoration: "none", color: "inherit" }}
@@ -109,7 +108,6 @@ export async function loader() {
       { message: error.response.data.error.message },
       { status: error.response.data.error.status }
     );
-    return null;
   }
 }
 
