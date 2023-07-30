@@ -323,9 +323,7 @@ export const action = async ({ request, params }) => {
 
     console.log(response);
 
-    if (response.status === 201) {
       return redirect(`/lostpets/${response.data._id}`);
-    }
   } catch (error) {
     console.log(error.response);
     if (error.response.status === 500) {

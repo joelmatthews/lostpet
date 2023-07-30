@@ -15,6 +15,7 @@ import { Button, FormControl, Stack } from "@mui/material";
 import EditFormImages from "../components/EditFormImages";
 
 import {
+  useLoaderData,
   useRouteLoaderData,
   useSubmit,
   useActionData,
@@ -29,22 +30,25 @@ import { getToken } from "../util/authTokenGetter";
 const LostPetEdit = () => {
   const submit = useSubmit();
   const data = useRouteLoaderData("lostPetShow");
+  const editData = useLoaderData();
   const errors = useActionData();
+  console.log(editData);
   console.log(data);
   const [selectedState, setSelectedState] = useState("");
   const [images, setImages] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(data.dateLost);
+  const [selectedDate, setSelectedDate] = useState(editData.dateLost);
   const [formTextData, setFormTextData] = useState({
-    name: data.name,
-    species: data.species,
-    breed: data.breed,
-    age: data.age,
+    name: editData.name,
+    species: editData.species,
+    breed: editData.breed,
+    age: editData.age,
     houseNumber: "",
     street: "",
     city: "",
     zipcode: "",
-    description: data.description,
+    description: editData.description,
   });
+  console.log(formTextData);
   const [imagesToDelete, setImagesToDelete] = useState([]);
   console.log(imagesToDelete);
 
@@ -86,9 +90,9 @@ const LostPetEdit = () => {
     formData.append("state", selectedState);
 
     if (imagesToDelete.length > 0) {
-      imagesToDelete.forEach(image => (
-        formData.append('deleteImages[]', image)
-      ))
+      imagesToDelete.forEach((image) =>
+        formData.append("deleteImages[]", image)
+      );
     }
 
     for (const formInput in formTextData) {
@@ -110,7 +114,7 @@ const LostPetEdit = () => {
       <Paper elevation={3} sx={{ padding: 5, marginY: 5 }}>
         <Box sx={{ marginY: 5 }}>
           <Typography variant="h3" component="h3" sx={{ textAlign: "center" }}>
-            Create a Lost Pet
+            Edit Lost Pet
           </Typography>
         </Box>
         <form onSubmit={handleEditPetSubmit}>
@@ -125,13 +129,14 @@ const LostPetEdit = () => {
                 id="petName"
                 name="name"
                 label="Pet Name"
-                defaultValue={data.name}
+                defaultValue={editData.name}
                 required
                 variant="outlined"
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("name")
                   ? { error: true }
                   : {})}
@@ -141,7 +146,7 @@ const LostPetEdit = () => {
               <DatePicker
                 sx={{ width: "100%" }}
                 label="Pet Lost Date"
-                defaultValue={dayjs(data.dateLost)}
+                defaultValue={dayjs(editData.dateLost)}
                 onChange={(newValue) => {
                   const isoStringDate = newValue.toISOString();
                   setSelectedDate(isoStringDate);
@@ -155,11 +160,12 @@ const LostPetEdit = () => {
                 label="Pet Species"
                 required
                 variant="outlined"
-                defaultValue={data.species}
+                defaultValue={editData.species}
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("species")
                   ? { error: true }
                   : {})}
@@ -172,11 +178,12 @@ const LostPetEdit = () => {
                 label="Pet Breed"
                 required
                 variant="outlined"
-                defaultValue={data.breed}
+                defaultValue={editData.breed}
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("breed")
                   ? { error: true }
                   : {})}
@@ -190,11 +197,12 @@ const LostPetEdit = () => {
                 type="number"
                 required
                 variant="outlined"
-                defaultValue={data.age}
+                defaultValue={editData.age}
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("age")
                   ? { error: true }
                   : {})}
@@ -211,7 +219,7 @@ const LostPetEdit = () => {
               component="p"
               sx={{ color: "rgb(160,160,160)" }}
             >
-              {`Previous Address: ${data.lastLocationAddress}`}
+              {`Previous Address: ${editData.lastLocationAddress}`}
             </Typography>
           </Box>
           <Grid container spacing={2}>
@@ -221,11 +229,11 @@ const LostPetEdit = () => {
                 name="houseNumber"
                 label="House Number (optional)"
                 variant="outlined"
-                defaultValue={data.houseNumber}
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("houseNumber")
                   ? { error: true }
                   : {})}
@@ -241,7 +249,8 @@ const LostPetEdit = () => {
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("street")
                   ? { error: true }
                   : {})}
@@ -257,7 +266,8 @@ const LostPetEdit = () => {
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("city")
                   ? { error: true }
                   : {})}
@@ -296,7 +306,8 @@ const LostPetEdit = () => {
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
                 {...(errors &&
-                errors !== null && errors.validationError &&
+                errors !== null &&
+                errors.validationError &&
                 errors.validationError[0].includes("zipcode")
                   ? { error: true }
                   : {})}
@@ -341,14 +352,14 @@ const LostPetEdit = () => {
                 rows={4}
                 required
                 variant="outlined"
-                defaultValue={data.description}
+                defaultValue={editData.description}
                 sx={{ width: "100%" }}
                 onChange={handleTextInputChange}
               />
             </Grid>
           </Grid>
           <Stack sx={{ marginY: 5 }} direction="row" spacing={2}>
-            {data.lostPetImages.map((image, index) => (
+            {editData.lostPetImages.map((image, index) => (
               <EditFormImages
                 key={index}
                 onImageDeleteSelect={onImageDeleteSelect}
@@ -370,7 +381,11 @@ const LostPetEdit = () => {
           <Grid
             item
             xs={4}
-            sx={{ display: "flex", justifyContent: "start", marginTop: 5 }}
+            sx={{
+              display: "flex",
+              justifyContent: "start",
+              marginTop: 5,
+            }}
           >
             <Button variant="contained" color="warning" type="submit">
               Edit Lost Pet
@@ -383,6 +398,21 @@ const LostPetEdit = () => {
 };
 
 export default LostPetEdit;
+
+export const loader = async ({ params }) => {
+  const lostPetId = params.lostPetId;
+  try {
+    const response = await lostPetInstance.get(`/lostpets/${lostPetId}`);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw json(
+      { message: error.response.data.message },
+      { status: error.response.status }
+    );
+  }
+};
 
 export const action = async ({ request, params }) => {
   const lostPetId = params.lostPetId;
@@ -399,18 +429,20 @@ export const action = async ({ request, params }) => {
 
   const token = getToken();
   try {
-    const response = await lostPetInstance.put(`/lostpets/${lostPetId}/edit`, formData, {
-      headers: {
-        Authorization: "Bearer " + token.token,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await lostPetInstance.put(
+      `/lostpets/${lostPetId}/edit`,
+      formData,
+      {
+        headers: {
+          Authorization: "Bearer " + token.token,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     console.log(response);
 
-    if (response.status === 201) {
-      return redirect(`/lostpets/${response.data._id}`);
-    }
+    return redirect(`/lostpets/${response.data._id}`);
   } catch (error) {
     console.log(error.response);
     if (error.response.status === 500 || error.response.status === 404) {

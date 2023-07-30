@@ -21,6 +21,7 @@ import { action as registerAction } from "./pages/Home";
 import { loader as indexDataLoader } from "./pages/Home";
 import { loader as lostPetLoader } from "./pages/LostPetIndex";
 import { action as lostPetNewAction } from "./pages/LostPetNew";
+import { loader as lostPetEditLoader } from "./pages/LostPetEdit";
 import { action as lostPetEditAction } from "./pages/LostPetEdit";
 import { loader as lostPetShowLoader } from "./pages/LostPetShowPage";
 import { action as lostPetDeleteAction } from "./pages/LostPetShowPage";
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
                 path: "edit",
                 element: <LostPetEdit />,
                 action: lostPetEditAction,
+                loader: lostPetEditLoader
               },
             ],
           },

@@ -6,6 +6,7 @@ const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
 const geocode = async (urlEncodedAddress) => {
     const response = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${urlEncodedAddress}.json?access_token=${MAPBOX_TOKEN}`);
+    console.log(response);
     const feature = response.data.features[0];
     return {
         type: 'Point',
