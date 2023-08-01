@@ -52,9 +52,7 @@ module.exports.getLostPetById = async (req, res, next) => {
     if (!lostPet) {
       throw new LostPetsNotFoundError();
     }
-    setTimeout(() => {
-      res.status(200).json(lostPet);
-    }, 300)
+    res.status(200).json(lostPet);
   } catch (error) {
     next(error);
   }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -26,6 +27,9 @@ const HomePage = () => {
   const navigation = useNavigation();
   const lostPets = useLoaderData();
   const [popupInfo, setPopupInfo] = useState(null);
+  const theme = useTheme();
+
+  console.log(theme);
 
   console.log(token);
 
@@ -33,7 +37,7 @@ const HomePage = () => {
     <>
       {navigation.state === "submitting" ? <FormSubmissionPending /> : ""}
       <Grid container spacing={2}>
-        {!token &&
+        {!token && (
           <Grid item xs={12} sm={4}>
             <Paper
               elevation={3}
@@ -175,8 +179,13 @@ const HomePage = () => {
               </Box>
             </Paper>
           </Grid>
-        }
-        <Grid item xs={0} {...(token ? { sm: 12 } : { sm: 8 })}>
+        )}
+        <Grid
+          item
+          xs={0}
+          sx={{ minHeight: "500px" }}
+          {...(token ? { sm: 12 } : { sm: 8 })}
+        >
           <Map
             mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
             initialViewState={{
@@ -229,6 +238,15 @@ const HomePage = () => {
               </Popup>
             )}
           </Map>
+          {token && <Box sx={{margin: 2}}>
+            <Typography
+                    variant="h4"
+                    component="h4"
+                    sx={{ textAlign: "center", fontWeight: 600, color: `${theme.palette.primary.light}` }}
+                  >
+                    View Lost Pets! Click on a Map Marker to View a Pet!
+                  </Typography>
+            </Box>}
         </Grid>
       </Grid>
     </>
@@ -264,10 +282,10 @@ export const action = async ({ request }) => {
     const token = response.data.token;
     console.log(token);
     localStorage.setItem("token", token);
-    
+
     const expiration = new Date();
     expiration.setHours(expiration.getHours() + 1);
-    localStorage.setItem('expiration', expiration.toISOString());
+    localStorage.setItem("expiration", expiration.toISOString());
 
     return redirect("/lostpets");
   } catch (error) {

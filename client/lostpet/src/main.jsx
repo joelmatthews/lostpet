@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
                 path: "edit",
                 element: <LostPetEdit />,
                 action: lostPetEditAction,
-                loader: lostPetEditLoader
+                loader: lostPetEditLoader,
               },
             ],
           },
