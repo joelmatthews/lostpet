@@ -238,16 +238,51 @@ const HomePage = () => {
               </Popup>
             )}
           </Map>
-          {token && <Box sx={{margin: 2}}>
-            <Typography
-                    variant="h4"
-                    component="h4"
-                    sx={{ textAlign: "center", fontWeight: 600, color: `${theme.palette.primary.light}` }}
-                  >
-                    View Lost Pets! Click on a Map Marker to View a Pet!
-                  </Typography>
-            </Box>}
+          {token && (
+            <Box sx={{ margin: 2 }}>
+              <Typography
+                variant="h4"
+                component="h4"
+                sx={{
+                  textAlign: "center",
+                  fontWeight: 600,
+                  color: `${theme.palette.primary.light}`,
+                }}
+              >
+                View Lost Pets! Click on a Map Marker to View a Pet!
+              </Typography>
+            </Box>
+          )}
         </Grid>
+        {!token && (
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                width: "100%",
+                backgroundColor: `${theme.palette.primary.dark}`,
+                padding: "1.5rem",
+                borderRadius: 5,
+              }}
+            >
+              <Typography variant="h5" component="h5" sx={{ color: "white", marginBottom: 1.5 }}>
+                Post your Lost Pet by signing up! View lost pets by selecting a
+                map marker or hitting the button below!
+              </Typography>
+              <Link to="/lostpets" style={{ textDecoration: "none" }}>
+                <Button
+                  sx={{
+                    backgroundColor: `${theme.palette.primary.main}`,
+                    color: "white",
+                    border: "1px solid white",
+                  }}
+                >
+                  View All Lost Pets
+                </Button>
+              </Link>
+              <Button></Button>
+            </Box>
+          </Grid>
+        )}
       </Grid>
     </>
   );

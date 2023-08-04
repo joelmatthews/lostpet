@@ -6,6 +6,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
 const multer = require("multer");
+const dotenv = require('dotenv');
+dotenv.config();
+console.log(process.env.NODE_ENV)
+
+
+
 
 //Custom Errors
 const { AppError } = require("./utilities/appError");
@@ -14,12 +20,14 @@ const { AppError } = require("./utilities/appError");
 const lostPetRoutes = require("./routes/lostPetRoutes");
 const authRoutes = require("./routes/authRoutes");
 
+const dbUrl = process.env.NODE_ENV === 'production' ? process.env.DB_URL_PROD : process.env.DB_URL_DEV;
+
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://127.0.0.1:27017/lostpet", { connectTimeoutMS: 5000 })
+  .connect(dbUrl, { connectTimeoutMS: 5000 })
   .catch((e) => console.log(e));
 
-// Check if the connection was succesful
+// Check if the connection was succesful   
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error"));
 db.once("open", () => {
