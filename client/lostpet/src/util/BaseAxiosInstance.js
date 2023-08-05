@@ -5,8 +5,6 @@ const baseRestService = new BaseRestService();
 const lostPetUrl = baseRestService.buildUrl();
 
 export const lostPetInstance = axios.create({
-    baseURL: lostPetUrl,
-    timeout: 1000,
-
+    baseURL: lostPetUrl
 })
 
