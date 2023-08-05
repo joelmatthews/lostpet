@@ -239,14 +239,14 @@ const HomePage = () => {
             )}
           </Map>
           {token && (
-            <Box sx={{ margin: 2 }}>
+            <Box sx={{ marginY: 2, marginRight: 'auto', width: '100%', backgroundColor: `${theme.palette.primary.dark}`, padding: '1.5rem', borderRadius: 5 }}>
               <Typography
                 variant="h4"
                 component="h4"
                 sx={{
                   textAlign: "center",
                   fontWeight: 600,
-                  color: `${theme.palette.primary.light}`,
+                  color: `white`,
                 }}
               >
                 View Lost Pets! Click on a Map Marker to View a Pet!
