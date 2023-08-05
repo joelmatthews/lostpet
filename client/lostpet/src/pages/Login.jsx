@@ -92,7 +92,6 @@ export const action = async ({ request }) => {
     }
     return errors
   }
-  return null;
 };
 
 export default Login;
