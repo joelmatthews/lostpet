@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
-import FormSubmissionPending from "../components/formSubmissionPending";
+import FormSubmissionPending from "../components/FormSubmissionPending";
 import Map, { Marker, Popup } from "react-map-gl";
 
 import { lostPetInstance } from "../util/BaseAxiosInstance";
